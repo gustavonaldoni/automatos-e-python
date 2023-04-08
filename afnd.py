@@ -27,6 +27,14 @@ class AFND:
         self.q0 = q0
         self.F = F
 
+    def delta_extendida(self, conjunto_de_estados: set, simbolo: str):
+        r = set()
+        
+        for q in conjunto_de_estados:
+            r.update(self.Delta[(q, simbolo)])
+
+        return r
+
     def verificar(self, palavra: str):
         r = set()
 
@@ -42,13 +50,11 @@ class AFND:
             if q0 == {-1}:
                 return False
 
-            for q in q0:
-                r.update(self.Delta[(q, palavra[0])])
-
+            q0 = self.delta_extendida(q0, palavra[0])
             palavra = palavra[1:]
 
         for qf in self.F:
             if qf in r:
                 return True
-        
+
         return False
