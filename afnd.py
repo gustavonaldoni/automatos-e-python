@@ -65,7 +65,10 @@ class AFND:
 
         print()
         for par, p in self.Delta.items():
-            print(f'δ({par[0]}, {par[1]}) = {p}')
+            if len(p) == 0:
+                print(f'δ({par[0]}, {par[1]}) = {{}}')
+            else:
+                print(f'δ({par[0]}, {par[1]}) = {p}')
         print()
 
         print(f'q0 = {self.q0}')
