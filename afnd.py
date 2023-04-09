@@ -11,7 +11,7 @@ class AFND:
 
         Delta
         Definição: função programa.
-        Formato: {(q1, s) : p}, em que q1 é uma string pertencente a Q, p é um subconjunto de Q e s é uma string pertencente a Sigma.
+        Formato: {(q, s) : p}, em que q é uma string pertencente a Q, p é um subconjunto de Q e s é uma string pertencente a Sigma.
 
         q0
         Definição: estado inicial.
