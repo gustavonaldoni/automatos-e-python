@@ -1,3 +1,6 @@
+from afd import AFD
+
+
 class AFND:
     def __init__(self):
         """
@@ -33,7 +36,7 @@ class AFND:
     def inserir_estados(self, *estados):
         for estado in estados:
             self.Q.add(estado)
-    
+
     def definir_estado_inicial(self, estado: str):
         if estado in self.Q:
             self.q0 = estado
@@ -46,19 +49,19 @@ class AFND:
         for estado in estados:
             if estado in self.Q:
                 self.F.add(estado)
-    
+
     def inserir_simbolo(self, simbolo: str):
         self.Sigma.add(simbolo)
 
     def inserir_simbolos(self, *simbolos):
         for simbolo in simbolos:
             self.Sigma.add(simbolo)
-    
+
     def inserir_transicao(self, estado_inicial: str, simbolo: str, estados_resultantes: set):
         if estados_resultantes.issubset(self.Q) and estado_inicial in self.Q and simbolo in self.Sigma:
             transicao = {(estado_inicial, simbolo): estados_resultantes}
             self.Delta.update(transicao)
-    
+
     def mostrar(self):
         print(f'Q = {self.Q}')
         print(f'Σ = {self.Sigma}')
@@ -73,3 +76,50 @@ class AFND:
 
         print(f'q0 = {self.q0}')
         print(f'F = {self.F}')
+
+    def funcao_caminho(self, caminho: set, simbolo: str):
+        resultado = set()
+
+        for estado in caminho:
+            resultado.update(self.Delta[(estado, simbolo)]) 
+        
+        return tuple(resultado)
+
+    def achar_novos_estados_finais(self, novos_estados: set):
+        resultado = set()
+
+        for novo_estado in novos_estados:
+            for estado in novo_estado:
+                if estado in self.F:
+                    resultado.add(estado)
+
+        return resultado
+
+    def converter_para_afd(self):
+        afd = AFD()
+
+        novos_estados = set()
+        novos_estados.add((self.q0,))
+        
+        novos_estados_aux = novos_estados.copy()
+
+        while len(novos_estados) > 0:
+
+            for estado in novos_estados:
+                for simbolo in self.Sigma:
+                    novo_estado = self.funcao_caminho(set(estado), simbolo)
+                    novos_estados_aux.add(novo_estado) 
+
+            n = novos_estados_aux.copy()
+            n.difference_update(novos_estados)
+            
+            novos_estados = n.copy()
+        
+        if tuple() in novos_estados:
+            novos_estados.remove(tuple())
+
+        print(novos_estados)
+
+            
+            
+        
