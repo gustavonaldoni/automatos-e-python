@@ -81,17 +81,17 @@ class AFND:
         resultado = set()
 
         for estado in caminho:
-            resultado.update(self.Delta[(estado, simbolo)]) 
-        
-        return tuple(resultado)
+            resultado.update(self.Delta[(estado, simbolo)])
 
-    def achar_novos_estados_finais(self, novos_estados: set):
+        return frozenset(resultado)
+
+    def achar_novos_estados_finais(self, novos_estados: frozenset):
         resultado = set()
 
         for novo_estado in novos_estados:
             for estado in novo_estado:
                 if estado in self.F:
-                    resultado.add(estado)
+                    resultado.add(novo_estado)
 
         return resultado
 
@@ -99,27 +99,29 @@ class AFND:
         afd = AFD()
 
         novos_estados = set()
-        novos_estados.add((self.q0,))
-        
-        novos_estados_aux = novos_estados.copy()
+        novos_estados.add(frozenset({self.q0,}))
 
-        while len(novos_estados) > 0:
+        novos_estados_aux1 = novos_estados.copy()
+        novos_estados_aux2 = novos_estados.copy()
+        diferenca = novos_estados.copy()
 
-            for estado in novos_estados:
+        while len(diferenca) > 0:
+            for estado in novos_estados_aux1:
                 for simbolo in self.Sigma:
                     novo_estado = self.funcao_caminho(set(estado), simbolo)
-                    novos_estados_aux.add(novo_estado) 
+                    
+                    novos_estados.add(novo_estado)
+                    novos_estados_aux2.add(novo_estado)
 
-            n = novos_estados_aux.copy()
-            n.difference_update(novos_estados)
-            
-            novos_estados = n.copy()
-        
-        if tuple() in novos_estados:
-            novos_estados.remove(tuple())
+            diferenca = novos_estados_aux2.difference(novos_estados_aux1)
+
+            novos_estados_aux1 = diferenca.copy()
+            novos_estados_aux2 = diferenca.copy()
+
+        if frozenset() in novos_estados:
+            novos_estados.remove(frozenset())
+
+        novos_estados_finais = self.achar_novos_estados_finais(novos_estados)
 
         print(novos_estados)
-
-            
-            
-        
+        print(novos_estados_finais)
