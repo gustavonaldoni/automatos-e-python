@@ -85,13 +85,13 @@ class AFND:
 
         return frozenset(resultado)
 
-    def achar_novos_estados_finais(self, novos_estados: frozenset):
+    def achar_novos_estados_finais(self, novos_estados: dict):
         resultado = set()
 
-        for novo_estado in novos_estados:
+        for novo_estado, novo_nome in novos_estados.items():
             for estado in novo_estado:
                 if estado in self.F:
-                    resultado.add(novo_estado)
+                    resultado.add(novo_nome)
 
         return resultado
 
@@ -121,7 +121,34 @@ class AFND:
         if frozenset() in novos_estados:
             novos_estados.remove(frozenset())
 
-        novos_estados_finais = self.achar_novos_estados_finais(novos_estados)
+        i = 0
+        novos_estados_renomeados = dict()
 
-        print(novos_estados)
-        print(novos_estados_finais)
+        for novo_estado in novos_estados:
+            novos_estados_renomeados.update({novo_estado : f'e{i}'})
+            i += 1
+
+        for novo_estado in novos_estados:
+            for simbolo in self.Sigma:
+                estado_inicial = novos_estados_renomeados[novo_estado]
+                estado_resultante = self.funcao_caminho(novo_estado, simbolo)
+
+                if estado_resultante == frozenset():
+                    estado_resultante = ''
+                    afd.inserir_estado(estado_inicial)
+                else:
+                    estado_resultante = novos_estados_renomeados[estado_resultante]
+                    afd.inserir_estados(estado_inicial, estado_resultante)
+
+                afd.Sigma = self.Sigma.copy()
+                afd.inserir_transicao(estado_inicial, simbolo, estado_resultante)
+        
+        afd.definir_estado_inicial('e0')
+        
+        novos_estados_finais = self.achar_novos_estados_finais(novos_estados_renomeados)
+        for novo_estado_final in novos_estados_finais:
+            afd.definir_estado_final(novo_estado_final)
+        
+        print(novos_estados_renomeados)
+        return afd
+

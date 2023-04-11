@@ -34,5 +34,6 @@ afnd1.definir_estado_inicial('q0')
 afnd1.definir_estados_finais('q2', 'q3')
 
 afnd1.mostrar()
+afd2 = afnd1.converter_para_afd()
 
-afnd1.converter_para_afd()
+afd2.mostrar()
