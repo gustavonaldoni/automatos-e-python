@@ -1,7 +1,8 @@
+from af import AF
 from afd import AFD
 
 
-class AFND:
+class AFND(AF):
     def __init__(self):
         """
         Q
@@ -24,38 +25,7 @@ class AFND:
         Definição: conjunto de estados finais, sendo um subconjunto de Q.
         Formato: {q0, q1, q2, ..., qn}, em que cada elemento é uma string pertencente a Q.
         """
-        self.Q = set()
-        self.Sigma = set()
-        self.Delta = dict()
-        self.q0 = 'q0'
-        self.F = set()
-
-    def inserir_estado(self, estado: str):
-        self.Q.add(estado)
-
-    def inserir_estados(self, *estados):
-        for estado in estados:
-            self.Q.add(estado)
-
-    def definir_estado_inicial(self, estado: str):
-        if estado in self.Q:
-            self.q0 = estado
-
-    def definir_estado_final(self, estado: str):
-        if estado in self.Q:
-            self.F.add(estado)
-
-    def definir_estados_finais(self, *estados):
-        for estado in estados:
-            if estado in self.Q:
-                self.F.add(estado)
-
-    def inserir_simbolo(self, simbolo: str):
-        self.Sigma.add(simbolo)
-
-    def inserir_simbolos(self, *simbolos):
-        for simbolo in simbolos:
-            self.Sigma.add(simbolo)
+        super().__init__()
 
     def inserir_transicao(self, estado_inicial: str, simbolo: str, estados_resultantes: set):
         if estados_resultantes.issubset(self.Q) and estado_inicial in self.Q and simbolo in self.Sigma:
@@ -99,7 +69,7 @@ class AFND:
         afd = AFD()
 
         novos_estados = set()
-        novos_estados.add(frozenset({self.q0,}))
+        novos_estados.add(frozenset({self.q0, }))
 
         novos_estados_aux1 = novos_estados.copy()
         novos_estados_aux2 = novos_estados.copy()
@@ -109,7 +79,7 @@ class AFND:
             for estado in novos_estados_aux1:
                 for simbolo in self.Sigma:
                     novo_estado = self.funcao_caminho(set(estado), simbolo)
-                    
+
                     novos_estados.add(novo_estado)
                     novos_estados_aux2.add(novo_estado)
 
@@ -125,7 +95,7 @@ class AFND:
 
         i = 0
         for novo_estado in novos_estados:
-            novos_estados_renomeados.update({novo_estado : f'e{i}'})
+            novos_estados_renomeados.update({novo_estado: f'e{i}'})
             i += 1
 
         for novo_estado in novos_estados:
@@ -141,13 +111,15 @@ class AFND:
                     afd.inserir_estados(estado_inicial, estado_resultante)
 
                 afd.Sigma = self.Sigma.copy()
-                afd.inserir_transicao(estado_inicial, simbolo, estado_resultante)
-        
-        afd.definir_estado_inicial(novos_estados_renomeados[frozenset({self.q0,})])
-        
-        novos_estados_finais = self.achar_novos_estados_finais(novos_estados_renomeados)
+                afd.inserir_transicao(
+                    estado_inicial, simbolo, estado_resultante)
+
+        afd.definir_estado_inicial(
+            novos_estados_renomeados[frozenset({self.q0, })])
+
+        novos_estados_finais = self.achar_novos_estados_finais(
+            novos_estados_renomeados)
         for novo_estado_final in novos_estados_finais:
             afd.definir_estado_final(novo_estado_final)
 
         return afd
-

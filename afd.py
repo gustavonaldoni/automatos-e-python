@@ -1,4 +1,7 @@
-class AFD:
+from af import AF
+
+
+class AFD(AF):
     def __init__(self):
         """
         Q
@@ -21,38 +24,7 @@ class AFD:
         Definição: conjunto de estados finais, sendo um subconjunto de Q.
         Formato: {q0, q1, q2, ..., qn}, em que cada elemento é uma string pertencente a Q.
         """
-        self.Q = set()
-        self.Sigma = set()
-        self.Delta = dict()
-        self.q0 = 'q0'
-        self.F = set()
-
-    def inserir_estado(self, estado: str):
-        self.Q.add(estado)
-
-    def inserir_estados(self, *estados):
-        for estado in estados:
-            self.Q.add(estado)
-
-    def definir_estado_inicial(self, estado: str):
-        if estado in self.Q:
-            self.q0 = estado
-
-    def definir_estado_final(self, estado: str):
-        if estado in self.Q:
-            self.F.add(estado)
-
-    def definir_estados_finais(self, *estados):
-        for estado in estados:
-            if estado in self.Q:
-                self.F.add(estado)
-
-    def inserir_simbolo(self, simbolo: str):
-        self.Sigma.add(simbolo)
-
-    def inserir_simbolos(self, *simbolos):
-        for simbolo in simbolos:
-            self.Sigma.add(simbolo)
+        super().__init__()
 
     def inserir_transicao(self, estado_inicial: str, simbolo: str, estado_resultante: str):
         if estado_inicial in self.Q and (estado_resultante in self.Q or estado_resultante == '') and simbolo in self.Sigma:
