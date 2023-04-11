@@ -121,9 +121,9 @@ class AFND:
         if frozenset() in novos_estados:
             novos_estados.remove(frozenset())
 
-        i = 0
         novos_estados_renomeados = dict()
 
+        i = 0
         for novo_estado in novos_estados:
             novos_estados_renomeados.update({novo_estado : f'e{i}'})
             i += 1
@@ -143,12 +143,11 @@ class AFND:
                 afd.Sigma = self.Sigma.copy()
                 afd.inserir_transicao(estado_inicial, simbolo, estado_resultante)
         
-        afd.definir_estado_inicial('e0')
+        afd.definir_estado_inicial(novos_estados_renomeados[frozenset({self.q0,})])
         
         novos_estados_finais = self.achar_novos_estados_finais(novos_estados_renomeados)
         for novo_estado_final in novos_estados_finais:
             afd.definir_estado_final(novo_estado_final)
-        
-        print(novos_estados_renomeados)
+
         return afd
 
