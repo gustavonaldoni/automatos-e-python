@@ -40,8 +40,6 @@ class AFNDe(AF):
         for par, p in self.Delta.items():
             if len(p) == 0:
                 print(f'δ({par[0]}, {par[1]}) = {{}}')
-            elif par[1] == '':
-                print(f'δ({par[0]}, ε) = {p}')
             else:
                 print(f'δ({par[0]}, {par[1]}) = {p}')
         print()
@@ -62,6 +60,9 @@ class AFNDe(AF):
 
             for p in self.Delta[(estado, '')]:
                 resultado.update(self.fecho_vazio(p))
+
+                if resultado == self.Q:
+                    return resultado
             
             return resultado
 
