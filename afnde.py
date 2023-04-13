@@ -67,7 +67,15 @@ class AFNDe(AF):
             return resultado
 
     def fecho_vazio_extendido(self, conjunto_de_estados: set):
-        pass
+        resultado = set()
+
+        for estado in conjunto_de_estados:
+            if estado not in self.Q:
+                return 0
+            else:
+                resultado.update(self.fecho_vazio(estado))
+        
+        return resultado
 
     def converter_para_afnd(self):
         afnd = AFND()
