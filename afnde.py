@@ -69,13 +69,39 @@ class AFNDe(AF):
     def fecho_vazio_extendido(self, conjunto_de_estados: set):
         resultado = set()
 
+        if conjunto_de_estados.issubset(self.Q) == False:
+            return 0
+
         for estado in conjunto_de_estados:
-            if estado not in self.Q:
-                return 0
-            else:
-                resultado.update(self.fecho_vazio(estado))
+            resultado.update(self.fecho_vazio(estado))
         
         return resultado
+
+    def delta(self, estado: str, simbolo: str):
+        if (estado not in self.Q) or (simbolo not in self.Sigma):
+            return 0
+        
+        return self.Delta[(estado, simbolo)]
+    
+    def delta_extendido(self, conjunto_de_estados: set, simbolo: str):
+        resultado = set()
+
+        if conjunto_de_estados.issubset(self.Q) == False:
+            return 0
+        
+        if simbolo not in self.Sigma:
+            return 0
+
+        for estado in conjunto_de_estados:
+            resultado.update(self.delta(estado, simbolo))
+        
+        return resultado
+    
+    def delta_linha(self, estado: str, simbolo: str):
+        if (estado not in self.Q) or (simbolo not in self.Sigma):
+            return 0
+        
+        return self.fecho_vazio_extendido(self.delta_extendido(self.fecho_vazio(estado), simbolo))
 
     def converter_para_afnd(self):
         afnd = AFND()
