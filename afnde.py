@@ -106,11 +106,11 @@ class AFNDe(AF):
     def achar_novos_estados_finais(self):
         resultado = set()
 
-        for estado in self.Q:
-            for q in self.fecho_vazio(estado):
-                if q in self.F:
+        for estado in self.F:
+            for q in self.Q:
+                if estado in self.fecho_vazio(q):
                     resultado.add(q)
-
+        
         return resultado
 
     def converter_para_afnd(self):
