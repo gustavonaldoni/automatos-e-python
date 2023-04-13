@@ -30,7 +30,10 @@ print("========== Mostrando AFND-e ==========")
 afnde1.mostrar()
 print()
 
-afnde1.converter_para_afnd()
+afnd_equivalente = afnde1.converter_para_afnd()
+print("========== Mostrando AFND equivalente ==========")
+afnd_equivalente.mostrar()
+print()
 
 afnd1 = AFND()
 

@@ -103,9 +103,35 @@ class AFNDe(AF):
         
         return self.fecho_vazio_extendido(self.delta_extendido(self.fecho_vazio(estado), simbolo))
 
+    def achar_novos_estados_finais(self):
+        resultado = set()
+
+        for estado in self.Q:
+            for q in self.fecho_vazio(estado):
+                if q in self.F:
+                    resultado.add(q)
+
+        return resultado
+
     def converter_para_afnd(self):
         afnd = AFND()
 
-        fechos_vazios = dict()
         for estado in self.Q:
-            fechos_vazios.update({estado: self.fecho_vazio(estado)})
+            afnd.inserir_estado(estado)
+        
+        for simbolo in self.Sigma:
+            afnd.inserir_simbolo(simbolo)
+
+        for estado in self.Q:
+            for simbolo in self.Sigma:
+                delta_linha = self.delta_linha(estado, simbolo)
+                afnd.inserir_transicao(estado, simbolo, delta_linha)
+
+        afnd.definir_estado_inicial(self.q0)
+
+        novos_estados_finais = self.achar_novos_estados_finais()
+        for estado in novos_estados_finais:
+            afnd.definir_estado_final(estado)
+        
+        return afnd
+        
