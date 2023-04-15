@@ -27,9 +27,17 @@ class AFD(AF):
         super().__init__()
 
     def inserir_transicao(self, estado_inicial: str, simbolo: str, estado_resultante: str):
-        if estado_inicial in self.Q and (estado_resultante in self.Q or estado_resultante == '') and simbolo in self.Sigma:
-            transicao = {(estado_inicial, simbolo): estado_resultante}
-            self.Delta.update(transicao)
+        if estado_inicial not in self.Q:
+            return 0
+
+        if simbolo not in self.Sigma:
+            return 0
+
+        if estado_resultante not in self.Q and estado_resultante != '':
+            return 0
+
+        transicao = {(estado_inicial, simbolo): estado_resultante}
+        self.Delta.update(transicao)
 
     def verificar(self, palavra: str):
         q0 = self.q0

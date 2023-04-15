@@ -28,9 +28,17 @@ class AFNDe(AF):
         """
 
     def inserir_transicao(self, estado_inicial: str, simbolo: str, estados_resultantes: set):
-        if estados_resultantes.issubset(self.Q) and estado_inicial in self.Q and (simbolo in self.Sigma or simbolo == ''):
-            transicao = {(estado_inicial, simbolo): estados_resultantes}
-            self.Delta.update(transicao)
+        if estado_inicial not in self.Q:
+            return 0
+
+        if simbolo not in self.Sigma and simbolo != '':
+            return 0
+
+        if estados_resultantes.issubset(self.Q) == False:
+            return 0
+
+        transicao = {(estado_inicial, simbolo): estados_resultantes}
+        self.Delta.update(transicao)
 
     def mostrar(self):
         print(f'Q = {self.Q}')
@@ -46,16 +54,16 @@ class AFNDe(AF):
 
         print(f'q0 = {self.q0}')
         print(f'F = {self.F}')
-    
+
     def fecho_vazio(self, estado: str):
         if estado not in self.Q:
             return set()
 
         if self.Delta[(estado, '')] == set():
-            return set({estado,})
-        
+            return set({estado, })
+
         else:
-            resultado = set({estado,})
+            resultado = set({estado, })
             resultado.update(self.Delta[(estado, '')])
 
             for p in self.Delta[(estado, '')]:
@@ -63,7 +71,7 @@ class AFNDe(AF):
 
                 if resultado == self.Q:
                     return resultado
-            
+
             return resultado
 
     def fecho_vazio_extendido(self, conjunto_de_estados: set):
@@ -74,33 +82,33 @@ class AFNDe(AF):
 
         for estado in conjunto_de_estados:
             resultado.update(self.fecho_vazio(estado))
-        
+
         return resultado
 
     def delta(self, estado: str, simbolo: str):
         if (estado not in self.Q) or (simbolo not in self.Sigma):
             return 0
-        
+
         return self.Delta[(estado, simbolo)]
-    
+
     def delta_extendido(self, conjunto_de_estados: set, simbolo: str):
         resultado = set()
 
         if conjunto_de_estados.issubset(self.Q) == False:
             return 0
-        
+
         if simbolo not in self.Sigma:
             return 0
 
         for estado in conjunto_de_estados:
             resultado.update(self.delta(estado, simbolo))
-        
+
         return resultado
-    
+
     def delta_linha(self, estado: str, simbolo: str):
         if (estado not in self.Q) or (simbolo not in self.Sigma):
             return 0
-        
+
         return self.fecho_vazio_extendido(self.delta_extendido(self.fecho_vazio(estado), simbolo))
 
     def achar_novos_estados_finais(self):
@@ -110,7 +118,7 @@ class AFNDe(AF):
             for q in self.Q:
                 if estado in self.fecho_vazio(q):
                     resultado.add(q)
-        
+
         return resultado
 
     def converter_para_afnd(self):
@@ -118,7 +126,7 @@ class AFNDe(AF):
 
         for estado in self.Q:
             afnd.inserir_estado(estado)
-        
+
         for simbolo in self.Sigma:
             afnd.inserir_simbolo(simbolo)
 
@@ -132,6 +140,5 @@ class AFNDe(AF):
         novos_estados_finais = self.achar_novos_estados_finais()
         for estado in novos_estados_finais:
             afnd.definir_estado_final(estado)
-        
+
         return afnd
-        
