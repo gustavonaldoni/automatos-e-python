@@ -32,3 +32,12 @@ class AF:
     def inserir_simbolos(self, *simbolos):
         for simbolo in simbolos:
             self.Sigma.add(simbolo)
+
+    def delta(self, estado: str, simbolo: str):
+        if estado not in self.Q:
+            return 0
+
+        if simbolo not in self.Sigma:
+            return 0
+
+        return self.Delta[(estado, simbolo)]

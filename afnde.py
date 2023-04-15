@@ -85,12 +85,6 @@ class AFNDe(AF):
 
         return resultado
 
-    def delta(self, estado: str, simbolo: str):
-        if (estado not in self.Q) or (simbolo not in self.Sigma):
-            return 0
-
-        return self.Delta[(estado, simbolo)]
-
     def delta_extendido(self, conjunto_de_estados: set, simbolo: str):
         resultado = set()
 

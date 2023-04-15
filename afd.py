@@ -46,7 +46,7 @@ class AFD(AF):
             if palavra[0] not in self.Sigma:
                 return False
 
-            q0 = self.Delta[(q0, palavra[0])]
+            q0 = self.delta(q0, palavra[0])
 
             if q0 == '':
                 return False
